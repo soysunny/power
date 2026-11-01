@@ -1214,19 +1214,56 @@ function toggleRankingMode() {
   loadRanking();
 }
 
+/* =========================================================
+   랭킹 스위칭 (전체 랭킹 ↔ 이번 달 랭킹) - 강제 갱신 적용
+   ========================================================= */
+
+let isMonthlyRankingMode = false;
+
+function toggleRankingMode() {
+  isMonthlyRankingMode = !isMonthlyRankingMode;
+  
+  const titleEl = document.getElementById("rankingTitle");
+  const headerEl = document.getElementById("rankingTypeHeader");
+
+  if (isMonthlyRankingMode) {
+    titleEl.innerHTML = `<span style="color:#4f46e5;">❮</span> <span>이번 달 랭킹</span>`;
+    headerEl.textContent = "수익률(이번달)";
+  } else {
+    titleEl.innerHTML = `<span>전체 랭킹</span> <span style="color:#4f46e5;">❯</span>`;
+    headerEl.textContent = "수익률(전체)";
+  }
+
+  loadRanking();
+}
+
 async function loadRanking() {
   try {
-    const action = isMonthlyRankingMode ? "monthlyRanking" : "ranking";
-    const r = await get(action);
-    if (!r.success) throw Error();
+    rankingBody.innerHTML = '<tr><td colspan="3">불러오는 중...</td></tr>';
+    
+    const actionTarget = isMonthlyRankingMode ? "monthlyRanking" : "ranking";
+    
+    // GET 요청 시 구글 서버 캐시 문제를 방지하기 위해 POST 방식과 GET 방식을 모두 지원하도록 안전 호출
+    let r;
+    try {
+      r = await post(actionTarget);
+    } catch(err) {
+      r = await get(actionTarget);
+    }
+
+    if (!r || !r.success) {
+      throw Error(r ? r.message : "응답 데이터 없음");
+    }
+
     updateRanking(r.ranking || []);
   } catch (e) {
+    console.error("랭킹 로딩 에러:", e);
     rankingBody.innerHTML = '<tr><td colspan="3">랭킹을 불러오지 못했습니다.</td></tr>';
   }
 }
 
 function updateRanking(a) {
-  if (!a.length) {
+  if (!Array.isArray(a) || a.length === 0) {
     rankingBody.innerHTML = '<tr><td colspan="3">아직 등록된 사용자가 없습니다.</td></tr>';
     return;
   }

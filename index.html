@@ -561,10 +561,13 @@ th:last-child{
         </div>
       </section>
 
-      <!-- 랭킹 -->
+      <!-- 랭킹 (수정: 화살표 버튼 및 랭킹 헤더 추가) -->
       <section class="card">
         <div class="chart-header">
-          <div class="section-title">수익률 랭킹</div>
+          <div class="section-title" id="rankingTitle" style="cursor:pointer; display:flex; align-items:center; gap:6px;" onclick="toggleRankingMode()">
+            <span>전체 랭킹</span>
+            <span id="rankingArrow" style="font-size:16px; color:#4f46e5;">❯</span>
+          </div>
           <button class="secondary" onclick="loadRanking()">새로고침</button>
         </div>
         <table>
@@ -572,7 +575,7 @@ th:last-child{
             <tr>
               <th>순위</th>
               <th>아이디</th>
-              <th>수익률</th>
+              <th id="rankingTypeHeader">수익률(전체)</th>
             </tr>
           </thead>
           <tbody id="rankingBody">
@@ -1188,23 +1191,47 @@ async function sellStock(){
   }
 }
 
-async function loadRanking(){
-  try{
-    const r = await get("ranking");
-    if(!r.success) throw Error();
+/* =========================================================
+   랭킹 스위칭 (전체 랭킹 ↔ 이번 달 랭킹)
+   ========================================================= */
+
+let isMonthlyRankingMode = false;
+
+function toggleRankingMode() {
+  isMonthlyRankingMode = !isMonthlyRankingMode;
+  
+  const titleEl = document.getElementById("rankingTitle");
+  const headerEl = document.getElementById("rankingTypeHeader");
+
+  if (isMonthlyRankingMode) {
+    titleEl.innerHTML = `<span style="color:#4f46e5;">❮</span> <span>이번 달 랭킹</span>`;
+    headerEl.textContent = "수익률(이번달)";
+  } else {
+    titleEl.innerHTML = `<span>전체 랭킹</span> <span style="color:#4f46e5;">❯</span>`;
+    headerEl.textContent = "수익률(전체)";
+  }
+
+  loadRanking();
+}
+
+async function loadRanking() {
+  try {
+    const action = isMonthlyRankingMode ? "monthlyRanking" : "ranking";
+    const r = await get(action);
+    if (!r.success) throw Error();
     updateRanking(r.ranking || []);
-  } catch(e){
+  } catch (e) {
     rankingBody.innerHTML = '<tr><td colspan="3">랭킹을 불러오지 못했습니다.</td></tr>';
   }
 }
 
-function updateRanking(a){
-  if(!a.length){
+function updateRanking(a) {
+  if (!a.length) {
     rankingBody.innerHTML = '<tr><td colspan="3">아직 등록된 사용자가 없습니다.</td></tr>';
     return;
   }
 
-  rankingBody.innerHTML = a.map((u,i)=>{
+  rankingBody.innerHTML = a.map((u, i) => {
     const n = Number(u.profitRate || 0);
     const c = n > 0 ? "positive" : n < 0 ? "negative" : "";
     return `

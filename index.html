@@ -4,395 +4,87 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>우리반 전력 소비 실태 & 주식 거래</title>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
 *{box-sizing:border-box}
-
-body{
-  margin:0;
-  background:#f5f7fb;
-  color:#202124;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Arial,sans-serif
-}
-
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:40px 25px 60px
-}
-
-h1{
-  margin:0 0 8px;
-  font-size:32px;
-  letter-spacing:-1px
-}
-
-.description{
-  margin:0 0 28px;
-  color:#6b7280;
-  font-size:15px
-}
-
-.card, .chart-card{
-  background:#fff;
-  border-radius:18px;
-  padding:24px;
-  box-shadow:0 5px 20px rgba(0,0,0,.06);
-  margin-bottom:18px
-}
-
-.hidden{
-  display:none!important
-}
-
-button{
-  border:0;
-  border-radius:10px;
-  padding:12px 16px;
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer
-}
-
-button:hover{
-  opacity:0.9;
-}
-
-button:disabled{
-  opacity:.5;
-  cursor:not-allowed
-}
-
-.primary{
-  background:#4f46e5;
-  color:#fff
-}
-
-.buy{
-  background:#dc2626;
-  color:#fff
-}
-
-.sell{
-  background:#2563eb;
-  color:#fff
-}
-
-.secondary{
-  background:#eef0f4;
-  color:#374151
-}
-
-.stock-button{
-  display:inline-block;
-  margin-bottom:25px;
-  padding:12px 17px;
-  background:#4f46e5;
-  color:white;
-}
-
-input{
-  width:100%;
-  padding:13px 14px;
-  border:1px solid #d7dbe3;
-  border-radius:10px;
-  font-size:15px;
-  outline:none
-}
-
-input:focus{
-  border-color:#4f46e5
-}
-
-.login-box{
-  max-width:430px;
-  margin:50px auto
-}
-
-.login-box h2{
-  margin-top:0;
-  margin-bottom:20px
-}
-
-.field{
-  margin-bottom:14px
-}
-
-.field label{
-  display:block;
-  margin-bottom:7px;
-  font-size:13px;
-  font-weight:600
-}
-
-.row{
-  display:flex;
-  gap:10px;
-  align-items:center
-}
-
-.price-card{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  gap:20px
-}
-
-.stock-name{
-  color:#6b7280;
-  font-size:14px;
-  margin-bottom:5px
-}
-
-.price{
-  font-size:38px;
-  font-weight:750;
-  letter-spacing:-1px
-}
-
-.price.up{
-  color:#dc2626
-}
-
-.price.down{
-  color:#2563eb
-}
-
-.price-change{
-  font-size:14px;
-  margin-top:5px;
-  font-weight:600
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px
-}
-
-.stat{
-  background:#f7f8fb;
-  border-radius:13px;
-  padding:17px
-}
-
-.stat-label{
-  color:#6b7280;
-  font-size:13px;
-  margin-bottom:8px
-}
-
-.stat-value{
-  font-size:19px;
-  font-weight:700
-}
-
-.trade-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px
-}
-
-.trade-title{
-  font-size:18px;
-  font-weight:650;
-  margin-bottom:15px
-}
-
-.trade-total{
-  margin:12px 0 15px;
-  color:#6b7280;
-  font-size:14px
-}
-
-.trade-total strong{
-  color:#202124
-}
-
-.chart-scroll{
-  width:100%;
-  overflow-x:auto;
-  overflow-y:hidden;
-  padding-bottom:8px
-}
-
-.chart-wrapper{
-  position:relative;
-  height:390px;
-  width:100%;
-}
-
-#powerChartWrapper{
-  height:480px;
-}
-
-.chart-scroll::-webkit-scrollbar {
-  height:9px;
-}
-
-.chart-scroll::-webkit-scrollbar-track {
-  background:#eef0f4;
-  border-radius:10px;
-}
-
-.chart-scroll::-webkit-scrollbar-thumb {
-  background:#b8bec9;
-  border-radius:10px;
-}
-
-.chart-scroll::-webkit-scrollbar-thumb:hover {
-  background:#9299a6;
-}
-
-.chart-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:18px
-}
-
-.section-title, .chart-title{
-  font-size:18px;
-  font-weight:650
-}
-
-.status{
-  color:#6b7280;
-  font-size:13px;
-  white-space:nowrap;
-}
-
-.status-dot{
-  display:inline-block;
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#22c55e;
-  margin-right:5px;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse
-}
-
-th,td{
-  padding:13px 8px;
-  border-bottom:1px solid #eef0f4;
-  text-align:left;
-  font-size:14px
-}
-
-th{
-  color:#6b7280;
-  font-weight:600;
-  font-size:13px
-}
-
-td:last-child,
-th:last-child{
-  text-align:right
-}
-
-.rank-number{
-  width:45px;
-  color:#6b7280
-}
-
-.positive{
-  color:#dc2626;
-  font-weight:700
-}
-
-.negative{
-  color:#2563eb;
-  font-weight:700
-}
-
-.top-actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
-  margin-bottom:15px
-}
-
-.message{
-  min-height:20px;
-  margin-top:10px;
-  font-size:13px;
-  color:#6b7280
-}
-
-.message.error{
-  color:#dc2626
-}
-
-.message.success{
-  color:#16a34a
-}
-
+body{margin:0;background:#f5f7fb;color:#202124;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Arial,sans-serif}
+.container{max-width:1200px;margin:auto;padding:40px 25px 60px}
+h1{margin:0 0 8px;font-size:32px;letter-spacing:-1px}
+.description{margin:0 0 28px;color:#6b7280;font-size:15px}
+.card, .chart-card{background:#fff;border-radius:18px;padding:24px;box-shadow:0 5px 20px rgba(0,0,0,.06);margin-bottom:18px}
+.hidden{display:none!important}
+button{border:0;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;cursor:pointer}
+button:hover{opacity:0.9;}
+button:disabled{opacity:.5;cursor:not-allowed}
+.primary{background:#4f46e5;color:#fff}
+.buy{background:#dc2626;color:#fff}
+.sell{background:#2563eb;color:#fff}
+.secondary{background:#eef0f4;color:#374151}
+.stock-button{display:inline-block;margin-bottom:25px;padding:12px 17px;background:#4f46e5;color:white;}
+input{width:100%;padding:13px 14px;border:1px solid #d7dbe3;border-radius:10px;font-size:15px;outline:none}
+input:focus{border-color:#4f46e5}
+.login-box{max-width:430px;margin:50px auto}
+.login-box h2{margin-top:0;margin-bottom:20px}
+.field{margin-bottom:14px}
+.field label{display:block;margin-bottom:7px;font-size:13px;font-weight:600}
+.row{display:flex;gap:10px;align-items:center}
+.price-card{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+.stock-name{color:#6b7280;font-size:14px;margin-bottom:5px}
+.price{font-size:38px;font-weight:750;letter-spacing:-1px}
+.price.up{color:#dc2626}
+.price.down{color:#2563eb}
+.price-change{font-size:14px;margin-top:5px;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat{background:#f7f8fb;border-radius:13px;padding:17px}
+.stat-label{color:#6b7280;font-size:13px;margin-bottom:8px}
+.stat-value{font-size:19px;font-weight:700}
+.trade-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.trade-title{font-size:18px;font-weight:650;margin-bottom:15px}
+.trade-total{margin:12px 0 15px;color:#6b7280;font-size:14px}
+.trade-total strong{color:#202124}
+.chart-scroll{width:100%;overflow-x:auto;overflow-y:hidden;padding-bottom:8px}
+.chart-wrapper{position:relative;height:390px;width:100%;}
+#powerChartWrapper{height:480px;}
+.chart-scroll::-webkit-scrollbar {height:9px;}
+.chart-scroll::-webkit-scrollbar-track {background:#eef0f4;border-radius:10px;}
+.chart-scroll::-webkit-scrollbar-thumb {background:#b8bec9;border-radius:10px;}
+.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.section-title, .chart-title{font-size:18px;font-weight:650}
+.status{color:#6b7280;font-size:13px;white-space:nowrap;}
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:5px;}
+table{width:100%;border-collapse:collapse}
+th,td{padding:13px 8px;border-bottom:1px solid #eef0f4;text-align:left;font-size:14px}
+th{color:#6b7280;font-weight:600;font-size:13px}
+td:last-child, th:last-child{text-align:right}
+.rank-number{width:45px;color:#6b7280}
+.positive{color:#dc2626;font-weight:700}
+.negative{color:#2563eb;font-weight:700}
+.top-actions{display:flex;justify-content:flex-end;gap:8px;margin-bottom:15px}
+.message{min-height:20px;margin-top:10px;font-size:13px;color:#6b7280}
+.message.error{color:#dc2626}
+.message.success{color:#16a34a}
 @media(max-width:700px){
-  .container{
-    padding:30px 15px 45px
-  }
-
-  h1{
-    font-size:26px
-  }
-
-  .stats{
-    grid-template-columns:1fr 1fr
-  }
-
-  .trade-grid{
-    grid-template-columns:1fr
-  }
-
-  .price-card{
-    align-items:flex-start;
-    flex-direction:column
-  }
-
-  .chart-header{
-    align-items:flex-start;
-    flex-direction:column;
-    gap:8px
-  }
+  .container{padding:30px 15px 45px}
+  h1{font-size:26px}
+  .stats{grid-template-columns:1fr 1fr}
+  .trade-grid{grid-template-columns:1fr}
+  .price-card{align-items:flex-start;flex-direction:column}
+  .chart-header{align-items:flex-start;flex-direction:column;gap:8px}
 }
 </style>
 </head>
-
 <body>
 
 <div class="container">
-
-  <!-- ========================================== -->
-  <!-- 1. 전력 소비 실태 메인 섹션 -->
-  <!-- ========================================== -->
   <section id="powerSection">
     <h1>우리반 전력 소비 실태</h1>
-
-    <p class="description">
-      날짜별 전력 소비량을 확인할 수 있습니다. 단위: kWh
-    </p>
-
-    <button class="stock-button" onclick="showStockView()">
-      주식 거래 페이지 →
-    </button>
-
+    <p class="description">날짜별 전력 소비량을 확인할 수 있습니다. 단위: kWh</p>
+    <button class="stock-button" onclick="showStockView()">주식 거래 페이지 →</button>
     <div class="chart-card">
       <div class="chart-header">
-        <div class="chart-title">
-          날짜별 전력 소비량
-        </div>
-        <div class="status" id="powerStatus">
-          <span class="status-dot"></span>
-          데이터를 불러오는 중...
-        </div>
+        <div class="chart-title">날짜별 전력 소비량</div>
+        <div class="status" id="powerStatus"><span class="status-dot"></span>데이터를 불러오는 중...</div>
       </div>
-
       <div class="chart-scroll" id="powerChartScroll">
         <div class="chart-wrapper" id="powerChartWrapper">
           <canvas id="powerChart"></canvas>
@@ -401,93 +93,45 @@ th:last-child{
     </div>
   </section>
 
-
-  <!-- ========================================== -->
-  <!-- 2. 주식 거래 관련 섹션 -->
-  <!-- ========================================== -->
   <div id="stockSection" class="hidden">
-    
-    <!-- 로그인 -->
     <section id="loginSection" class="card login-box">
       <h2>전력 절약량 주식 거래</h2>
-      <p class="description">
-        학급용 가상 주식 거래 시뮬레이션입니다.
-      </p>
-
+      <p class="description">학급용 가상 주식 거래 시뮬레이션입니다.</p>
       <div style="margin-bottom: 15px;">
-        <button class="secondary" style="width:100%" onclick="showPowerView()">
-          ← 전력 소비 페이지로 돌아가기
-        </button>
+        <button class="secondary" style="width:100%" onclick="showPowerView()">← 전력 소비 페이지로 돌아가기</button>
       </div>
-
-      <div class="field">
-        <label>아이디</label>
-        <input id="loginUsername" type="text" autocomplete="username">
-      </div>
-
-      <div class="field">
-        <label>4자리 비밀번호</label>
-        <input id="loginPassword" type="password" inputmode="numeric" maxlength="4">
-      </div>
-
+      <div class="field"><label>아이디</label><input id="loginUsername" type="text" autocomplete="username"></div>
+      <div class="field"><label>4자리 비밀번호</label><input id="loginPassword" type="password" inputmode="numeric" maxlength="4"></div>
       <div class="field" style="margin-bottom:18px;">
         <label style="display:flex;align-items:center;gap:8px;font-weight:500;cursor:pointer;">
-          <input id="rememberLogin" type="checkbox" style="width:auto;margin:0;cursor:pointer;">
-          로그인 유지
+          <input id="rememberLogin" type="checkbox" style="width:auto;margin:0;cursor:pointer;"> 로그인 유지
         </label>
       </div>
-
       <div class="row">
         <button class="primary" style="flex:1" onclick="login()">로그인</button>
         <button class="secondary" style="flex:1" onclick="showRegister()">회원가입</button>
       </div>
-
       <div id="loginMessage" class="message"></div>
     </section>
 
-
-    <!-- 회원가입 -->
     <section id="registerSection" class="card login-box hidden">
       <h2>회원가입</h2>
-
-      <div class="field">
-        <label>아이디</label>
-        <input id="registerUsername" type="text">
-      </div>
-
-      <div class="field">
-        <label>4자리 숫자 비밀번호</label>
-        <input id="registerPassword" type="password" inputmode="numeric" maxlength="4">
-      </div>
-
+      <div class="field"><label>아이디</label><input id="registerUsername" type="text"></div>
+      <div class="field"><label>4자리 숫자 비밀번호</label><input id="registerPassword" type="password" inputmode="numeric" maxlength="4"></div>
       <div class="row">
         <button class="primary" style="flex:1" onclick="register()">가입하기</button>
         <button class="secondary" style="flex:1" onclick="showLogin()">로그인으로</button>
       </div>
-
       <div id="registerMessage" class="message"></div>
     </section>
 
-
-    <!-- 앱 메인 -->
     <main id="appSection" class="hidden">
       <div class="top-actions">
-        <button class="secondary" onclick="showPowerView()">
-          ← 전력 소비 페이지
-        </button>
-        <button class="secondary" onclick="logout()">
-          로그아웃
-        </button>
+        <button class="secondary" onclick="showPowerView()">← 전력 소비 페이지</button>
+        <button class="secondary" onclick="logout()">로그아웃</button>
       </div>
-
       <h1>전력 절약량 주식 거래</h1>
-
-      <p class="description">
-        전력 사용량이 감소하면 주가가 상승하고,
-        증가하면 주가가 하락하는 가상 거래 시뮬레이션입니다.
-      </p>
-
-      <!-- 현재 주가 -->
+      <p class="description">전력 사용량이 감소하면 주가가 상승하고, 증가하면 주가가 하락하는 가상 거래 시뮬레이션입니다.</p>
       <section class="card price-card">
         <div>
           <div class="stock-name">전력 절약량</div>
@@ -497,71 +141,40 @@ th:last-child{
         <div id="status" class="status">데이터를 불러오는 중...</div>
       </section>
 
-      <!-- 차트 -->
       <section class="card">
-        <div class="chart-header">
-          <div class="section-title">전력 절약량 주가</div>
-        </div>
+        <div class="chart-header"><div class="section-title">전력 절약량 주가</div></div>
         <div class="chart-scroll" id="chartScroll">
-          <div class="chart-wrapper" id="chartWrapper">
-            <canvas id="stockChart"></canvas>
-          </div>
+          <div class="chart-wrapper" id="chartWrapper"><canvas id="stockChart"></canvas></div>
         </div>
       </section>
 
-      <!-- 내 자산 -->
       <section class="card">
         <div class="section-title" style="margin-bottom:15px">내 자산</div>
         <div class="stats">
-          <div class="stat">
-            <div class="stat-label">현금</div>
-            <div id="cash" class="stat-value">-</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">보유 주식</div>
-            <div id="stocks" class="stat-value">-</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">총자산</div>
-            <div id="totalAsset" class="stat-value">-</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">수익률</div>
-            <div id="profitRate" class="stat-value">-</div>
-          </div>
+          <div class="stat"><div class="stat-label">현금</div><div id="cash" class="stat-value">-</div></div>
+          <div class="stat"><div class="stat-label">보유 주식</div><div id="stocks" class="stat-value">-</div></div>
+          <div class="stat"><div class="stat-label">총자산</div><div id="totalAsset" class="stat-value">-</div></div>
+          <div class="stat"><div class="stat-label">수익률</div><div id="profitRate" class="stat-value">-</div></div>
         </div>
       </section>
 
-      <!-- 거래 -->
       <section class="trade-grid">
         <div class="card">
           <div class="trade-title">매수</div>
-          <div class="field">
-            <label>수량</label>
-            <input id="buyQuantity" type="number" min="1" step="1" placeholder="구매할 주식 수">
-          </div>
-          <div class="trade-total">
-            예상 금액: <strong id="buyTotal">0원</strong>
-          </div>
+          <div class="field"><label>수량</label><input id="buyQuantity" type="number" min="1" step="1" placeholder="구매할 주식 수"></div>
+          <div class="trade-total">예상 금액: <strong id="buyTotal">0원</strong></div>
           <button class="buy" style="width:100%" onclick="buyStock()">매수</button>
           <div id="buyMessage" class="message"></div>
         </div>
-
         <div class="card">
           <div class="trade-title">매도</div>
-          <div class="field">
-            <label>수량</label>
-            <input id="sellQuantity" type="number" min="1" step="1" placeholder="판매할 주식 수">
-          </div>
-          <div class="trade-total">
-            예상 금액: <strong id="sellTotal">0원</strong>
-          </div>
+          <div class="field"><label>수량</label><input id="sellQuantity" type="number" min="1" step="1" placeholder="판매할 주식 수"></div>
+          <div class="trade-total">예상 금액: <strong id="sellTotal">0원</strong></div>
           <button class="sell" style="width:100%" onclick="sellStock()">매도</button>
           <div id="sellMessage" class="message"></div>
         </div>
       </section>
 
-      <!-- 랭킹 (수정: 화살표 버튼 및 랭킹 헤더 추가) -->
       <section class="card">
         <div class="chart-header">
           <div class="section-title" id="rankingTitle" style="cursor:pointer; display:flex; align-items:center; gap:6px;" onclick="toggleRankingMode()">
@@ -578,22 +191,15 @@ th:last-child{
               <th id="rankingTypeHeader">수익률(전체)</th>
             </tr>
           </thead>
-          <tbody id="rankingBody">
-            <tr><td colspan="3">불러오는 중...</td></tr>
-          </tbody>
+          <tbody id="rankingBody"><tr><td colspan="3">불러오는 중...</td></tr></tbody>
         </table>
       </section>
     </main>
-
   </div>
-
 </div>
 
-
 <script>
-/* =====================================================
-   페이지 (섹션) 전환 로직
-   ===================================================== */
+const API_URL = "https://script.google.com/macros/s/AKfycbze9FxXsP2fslsUOqHRGXAepOSSu4zr68-QTQ_krBr-ANhHg_iLvVh0-Uv8OZ1AGJC2_Q/exec";
 
 const powerSection = document.getElementById("powerSection");
 const stockSection = document.getElementById("stockSection");
@@ -606,83 +212,33 @@ function showPowerView() {
 function showStockView() {
   powerSection.classList.add("hidden");
   stockSection.classList.remove("hidden");
-  
-  if (token) {
-    openApp();
-  } else {
-    showLogin();
-  }
-
+  if (token) openApp();
+  else showLogin();
   setTimeout(() => {
     const chartScroll = document.getElementById("chartScroll");
-    if (chartScroll) {
-      chartScroll.scrollLeft = chartScroll.scrollWidth;
-    }
+    if (chartScroll) chartScroll.scrollLeft = chartScroll.scrollWidth;
   }, 100);
 }
 
-
-/* =====================================================
-   [PART 1] 전력 소비 실태 스크립트
-   ===================================================== */
-
 const REFRESH_INTERVAL = 10000;
-
 let powerChart = null;
 let previousDataKey = "";
 
-function formatKoreanDate(dateValue) {
-  if (!dateValue) return "";
-  const text = String(dateValue).trim();
-
-  if (text.includes("T")) {
-    const date = new Date(text);
-    if (!isNaN(date.getTime())) {
-      return (
-        (date.getUTCDate() + 1 > 31 ? date.getUTCMonth() + 2 : date.getUTCMonth() + 1) +
-        "/" +
-        (date.getUTCHours() >= 15 ? date.getUTCDate() + 1 : date.getUTCDate())
-      );
-    }
-  }
-
-  if (/^\d{1,2}\/\d{1,2}$/.test(text)) return text;
-
-  const match = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
-  if (match) {
-    return Number(match[2]) + "/" + Number(match[3]);
-  }
-
-  return text;
-}
-
 async function loadSpreadsheetData() {
   try {
-    // 주식 로딩과 요청이 겹쳐서 구글 서버 대기열에 걸리는 것을 방지하기 위해 0.1초 미세 시차 적용
     const response = await fetch(API_URL + "?action=price&t=" + Date.now(), { cache: "no-store" });
-    if (!response.ok) throw new Error("데이터를 불러오지 못했습니다.");
-
+    if (!response.ok) throw new Error();
     const result = await response.json();
     if (!result.success || !Array.isArray(result.history)) return;
 
-    // history 배열 데이터를 전력 차트용 데이터로 변환
-    const data = [];
-    for (let i = 0; i < result.history.length; i++) {
-      data.push({
-        date: result.history[i].date,
-        value: Number(result.history[i].power || 0)
-      });
-    }
-
+    const data = result.history.map(h => ({ date: h.date, value: Number(h.power || 0) }));
     const newDataKey = JSON.stringify(data);
     if (newDataKey !== previousDataKey) {
       updatePowerChart(data);
       previousDataKey = newDataKey;
     }
-
     updatePowerStatus();
   } catch (error) {
-    console.error("전력 데이터 로딩 오류:", error);
     document.getElementById("powerStatus").innerHTML = "⚠ 데이터를 불러오지 못했습니다.";
   }
 }
@@ -692,89 +248,41 @@ function updatePowerChart(data) {
     document.getElementById("powerStatus").innerHTML = "⚠ 표시할 데이터가 없습니다.";
     return;
   }
-
   const values = data.map(item => item.value);
   const maxValue = Math.max(...values);
   const minValue = Math.min(...values);
+  const pointLabels = data.map(item => item.value === maxValue ? "MAX" : item.value === minValue ? "MIN" : "");
 
-  const pointLabels = data.map(item => {
-    if (item.value === maxValue) return "MAX";
-    if (item.value === minValue) return "MIN";
-    return "";
-  });
-
-  const chartWrapper = document.getElementById("powerChartWrapper");
-  chartWrapper.style.width = Math.max(700, data.length * 90) + "px";
+  document.getElementById("powerChartWrapper").style.width = Math.max(700, data.length * 90) + "px";
 
   if (powerChart !== null) {
     const scroll = document.getElementById("powerChartScroll");
     const currentScroll = scroll.scrollLeft;
-
     powerChart.data.labels = data.map(item => item.date);
     powerChart.data.datasets[0].data = data.map(item => item.value);
     powerChart.options.plugins.maxMinLabels.labels = pointLabels;
     powerChart.update("none");
-
     scroll.scrollLeft = currentScroll;
     return;
   }
 
-  const canvas = document.getElementById("powerChart");
-  const ctx = canvas.getContext("2d");
-
+  const ctx = document.getElementById("powerChart").getContext("2d");
   powerChart = new Chart(ctx, {
     type: "line",
     data: {
       labels: data.map(item => item.date),
       datasets: [{
-        label: "전력 소비량",
-        data: data.map(item => item.value),
-        borderColor: "#4f46e5",
-        backgroundColor: "#4f46e5",
-        borderWidth: 3,
-        tension: 0.2,
-        pointRadius: 6,
-        pointHoverRadius: 9,
-        pointBorderWidth: 2,
-        pointBackgroundColor: "#ffffff",
-        pointBorderColor: "#4f46e5",
-        fill: false
+        label: "전력 소비량", data: data.map(item => item.value),
+        borderColor: "#4f46e5", backgroundColor: "#4f46e5", borderWidth: 3, tension: 0.2,
+        pointRadius: 6, pointHoverRadius: 9, pointBorderWidth: 2, pointBackgroundColor: "#ffffff", pointBorderColor: "#4f46e5", fill: false
       }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: false,
-      interaction: { intersect: false, mode: "index" },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: "#202124",
-          padding: 12,
-          callbacks: {
-            label: function(context) {
-              return "전력 소비량: " + context.parsed.y.toLocaleString() + " kWh";
-            }
-          }
-        },
-        maxMinLabels: { labels: pointLabels }
-      },
+      responsive: true, maintainAspectRatio: false, animation: false, interaction: { intersect: false, mode: "index" },
+      plugins: { legend: { display: false }, maxMinLabels: { labels: pointLabels } },
       scales: {
-        x: {
-          title: { display: true, text: "날짜" },
-          grid: { display: false },
-          ticks: { color: "#6b7280", autoSkip: false, maxRotation: 45, minRotation: 0 }
-        },
-        y: {
-          title: { display: true, text: "전력 소비량 (kWh)" },
-          beginAtZero: false,
-          grace: "10%",
-          ticks: {
-            color: "#6b7280",
-            callback: function(value) { return value.toLocaleString(); }
-          },
-          grid: { color: "#e8eaf0" }
-        }
+        x: { title: { display: true, text: "날짜" }, grid: { display: false }, ticks: { color: "#6b7280", autoSkip: false } },
+        y: { title: { display: true, text: "전력 소비량 (kWh)" }, beginAtZero: false, grace: "10%", ticks: { color: "#6b7280" }, grid: { color: "#e8eaf0" } }
       }
     },
     plugins: [{
@@ -783,62 +291,31 @@ function updatePowerChart(data) {
         const ctx = chart.ctx;
         const meta = chart.getDatasetMeta(0);
         const labels = pluginOptions.labels || [];
-
-        ctx.save();
-        ctx.font = "bold 12px Arial, sans-serif";
-        ctx.textAlign = "center";
-
+        ctx.save(); ctx.font = "bold 12px Arial, sans-serif"; ctx.textAlign = "center";
         meta.data.forEach((point, index) => {
-          const label = labels[index];
-          if (!label) return;
+          const label = labels[index]; if (!label) return;
           ctx.fillStyle = label === "MAX" ? "#dc2626" : "#2563eb";
           ctx.fillText(label, point.x, point.y - 15);
         });
-
         ctx.restore();
       }
     }]
   });
 
-  const scroll = document.getElementById("powerChartScroll");
-  setTimeout(() => { scroll.scrollLeft = scroll.scrollWidth; }, 50);
+  setTimeout(() => { document.getElementById("powerChartScroll").scrollLeft = 99999; }, 50);
 }
 
 function updatePowerStatus() {
-  const now = new Date();
-  const time = now.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  const time = new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
   document.getElementById("powerStatus").innerHTML = '<span class="status-dot"></span>실시간 업데이트 · ' + time;
 }
 
 setTimeout(loadSpreadsheetData, 200);
 setInterval(loadSpreadsheetData, REFRESH_INTERVAL);
 
+let token = localStorage.getItem("powerStockToken") || "";
+let currentPriceValue = 0, refreshTimer = null, stockChart = null, loadVersion = 0, previousStockChartKey = "";
 
-
-
-/* =====================================================
-   [PART 2] 전력 절약량 주식 거래 스크립트
-   ===================================================== */
-
-const API_URL = "https://script.google.com/macros/s/AKfycbze9FxXsP2fslsUOqHRGXAepOSSu4zr68-QTQ_krBr-ANhHg_iLvVh0-Uv8OZ1AGJC2_Q/exec";
-
-let token = "";
-
-const savedToken = localStorage.getItem("powerStockToken");
-
-if(savedToken){
-  token = savedToken;
-}
-
-let currentPriceValue = 0;
-let previousPriceValue = null;
-let refreshTimer = null;
-let stockChart = null;
-let loadVersion = 0;
-
-let previousStockChartKey = "";
-
-// DOM
 const loginSection = document.getElementById("loginSection");
 const registerSection = document.getElementById("registerSection");
 const appSection = document.getElementById("appSection");
@@ -858,255 +335,113 @@ const sellQuantity = document.getElementById("sellQuantity");
 const buyTotal = document.getElementById("buyTotal");
 const sellTotal = document.getElementById("sellTotal");
 const rankingBody = document.getElementById("rankingBody");
-const chartScroll = document.getElementById("chartScroll");
 const statusEl = document.getElementById("status");
 
-// 공통
-function money(v){
-  return Number(v || 0).toLocaleString("ko-KR") + "원";
-}
+function money(v){ return Number(v || 0).toLocaleString("ko-KR") + "원"; }
+function rateText(v){ const n = Number(v || 0); return (n >= 0 ? "+" : "") + n.toFixed(2) + "%"; }
+function msg(id,text,type=""){ const e = document.getElementById(id); e.textContent = text; e.className = "message " + type; }
 
-function rateText(v){
-  const n = Number(v || 0);
-  return (n >= 0 ? "+" : "") + n.toFixed(2) + "%";
-}
-
-function msg(id,text,type=""){
-  const e = document.getElementById(id);
-  e.textContent = text;
-  e.className = "message " + type;
-}
-
-// API
 async function post(action,data={}){
-  const r = await fetch(API_URL, {
-    method:"POST",
-    headers:{ "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify({ action, ...data })
-  });
+  const r = await fetch(API_URL, { method:"POST", headers:{ "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action, ...data }) });
   if(!r.ok) throw Error("서버 연결에 실패했습니다.");
   return r.json();
 }
-
 async function get(action){
   const r = await fetch(API_URL + "?action=" + encodeURIComponent(action) + "&t=" + Date.now(), { cache:"no-store" });
   if(!r.ok) throw Error("서버 연결에 실패했습니다.");
   return r.json();
 }
 
-function showRegister(){
-  loginSection.classList.add("hidden");
-  registerSection.classList.remove("hidden");
-  msg("registerMessage", "");
-}
-
-function showLogin(){
-  registerSection.classList.add("hidden");
-  loginSection.classList.remove("hidden");
-  msg("loginMessage", "");
-}
+function showRegister(){ loginSection.classList.add("hidden"); registerSection.classList.remove("hidden"); msg("registerMessage", ""); }
+function showLogin(){ registerSection.classList.add("hidden"); loginSection.classList.remove("hidden"); msg("loginMessage", ""); }
 
 async function register(){
   const username = registerUsername.value.trim();
   const password = registerPassword.value.trim();
-
-  if(!username || !/^\d{4}$/.test(password)){
-    msg("registerMessage", "아이디와 4자리 숫자 비밀번호를 입력해주세요.", "error");
-    return;
-  }
-
+  if(!username || !/^\d{4}$/.test(password)){ msg("registerMessage", "아이디와 4자리 숫자 비밀번호를 입력해주세요.", "error"); return; }
   try{
     const r = await post("register", { username, password });
-    if(!r.success){
-      msg("registerMessage", r.message || "가입에 실패했습니다.", "error");
-      return;
-    }
+    if(!r.success){ msg("registerMessage", r.message || "가입에 실패했습니다.", "error"); return; }
     msg("registerMessage", "회원가입이 완료되었습니다. 로그인해주세요.", "success");
-    loginUsername.value = username;
-    registerPassword.value = "";
+    loginUsername.value = username; registerPassword.value = "";
     setTimeout(showLogin, 700);
-  } catch(e){
-    msg("registerMessage", e.message, "error");
-  }
+  } catch(e){ msg("registerMessage", e.message, "error"); }
 }
 
 async function login(){
   const username = loginUsername.value.trim();
   const password = loginPassword.value.trim();
-
-  if(!username || !/^\d{4}$/.test(password)){
-    msg("loginMessage", "아이디와 4자리 숫자 비밀번호를 입력해주세요.", "error");
-    return;
-  }
-
+  if(!username || !/^\d{4}$/.test(password)){ msg("loginMessage", "아이디와 4자리 숫자 비밀번호를 입력해주세요.", "error"); return; }
   try{
     const r = await post("login", { username, password });
-    if(!r.success){
-      msg("loginMessage", r.message || "로그인에 실패했습니다.", "error");
-      return;
-    }
-
-    loadVersion++;
-    token = r.token;
-
-    if(rememberLogin.checked){
-      localStorage.setItem("powerStockToken", token);
-    } else {
-      localStorage.removeItem("powerStockToken");
-    }
-
-    loginPassword.value = "";
-    openApp();
-  } catch(e){
-    msg("loginMessage", e.message, "error");
-  }
+    if(!r.success){ msg("loginMessage", r.message || "로그인에 실패했습니다.", "error"); return; }
+    loadVersion++; token = r.token;
+    if(rememberLogin.checked) localStorage.setItem("powerStockToken", token);
+    else localStorage.removeItem("powerStockToken");
+    loginPassword.value = ""; openApp();
+  } catch(e){ msg("loginMessage", e.message, "error"); }
 }
 
 function openApp(){
-  loginSection.classList.add("hidden");
-  registerSection.classList.add("hidden");
-  appSection.classList.remove("hidden");
-
-  loadVersion++;
-
-  loadAll();
-
-  if(refreshTimer){
-    clearInterval(refreshTimer);
-  }
-
+  loginSection.classList.add("hidden"); registerSection.classList.add("hidden"); appSection.classList.remove("hidden");
+  loadVersion++; loadAll();
+  if(refreshTimer) clearInterval(refreshTimer);
   refreshTimer = setInterval(loadPriceOnly, 15000);
 }
 
 async function loadPriceOnly(){
   if(!token) return;
-
   try{
     const price = await get("price");
-    if(price.success){
-      updatePrice(price);
-      renderPriceChartData(price.history || []);
-    }
-  }
-  catch(e){
-    console.error("주가 업데이트 오류:", e);
-  }
+    if(price.success){ updatePrice(price); renderPriceChartData(price.history || []); }
+  } catch(e){}
 }
 
 function logout(){
-  loadVersion++;
-  token = "";
-  localStorage.removeItem("powerStockToken");
-  rememberLogin.checked = false;
-
-  if(refreshTimer) clearInterval(refreshTimer);
-  refreshTimer = null;
-
-  appSection.classList.add("hidden");
-  currentPriceValue = 0;
-  previousPriceValue = null;
-
-  currentPrice.textContent = "-";
-  priceChange.textContent = "-";
-  cash.textContent = "-";
-  stocks.textContent = "-";
-  totalAsset.textContent = "-";
-  profitRate.textContent = "-";
-
-  msg("buyMessage", "");
-  msg("sellMessage", "");
-
+  loadVersion++; token = ""; localStorage.removeItem("powerStockToken"); rememberLogin.checked = false;
+  if(refreshTimer) clearInterval(refreshTimer); refreshTimer = null;
+  appSection.classList.add("hidden"); currentPriceValue = 0;
+  currentPrice.textContent = "-"; priceChange.textContent = "-"; cash.textContent = "-"; stocks.textContent = "-"; totalAsset.textContent = "-"; profitRate.textContent = "-";
+  msg("buyMessage", ""); msg("sellMessage", "");
   rankingBody.innerHTML = '<tr><td colspan="3">불러오는 중...</td></tr>';
-  buyQuantity.value = "";
-  sellQuantity.value = "";
-  buyTotal.textContent = "0원";
-  sellTotal.textContent = "0원";
-  statusEl.textContent = "데이터를 불러오는 중...";
-
+  buyQuantity.value = ""; sellQuantity.value = ""; buyTotal.textContent = "0원"; sellTotal.textContent = "0원"; statusEl.textContent = "데이터를 불러오는 중...";
   showLogin();
 }
 
-/* =========================================================
-   [속도 최적화] 병렬 로딩 & 중복 API 요청 완전히 제거된 loadAll
-   ========================================================= */
 async function loadAll(){
-  const version = ++loadVersion;
-  const myToken = token;
+  const version = ++loadVersion; const myToken = token;
   if(!myToken) return;
-
   try{
     statusEl.textContent = "데이터를 불러오는 중...";
-
-    // 내 정보(me)와 주가 차트 데이터(price)만 한 번에 병렬 요청 (1초 미만)
-    const [me, price] = await Promise.all([
-      post("me", { token: myToken }),
-      get("price")
-    ]);
-
+    const [me, price] = await Promise.all([post("me", { token: myToken }), get("price")]);
     if(version !== loadVersion || myToken !== token) return;
-
     if(!me.success){
-      if(me.message === "로그인이 필요합니다."){
-        logout();
-        msg("loginMessage", "로그인이 만료되었습니다. 다시 로그인해주세요.", "error");
-      } else {
-        statusEl.textContent = "⚠ 계정 정보를 불러오지 못했습니다.";
-      }
+      if(me.message === "로그인이 필요합니다."){ logout(); msg("loginMessage", "로그인이 만료되었습니다.", "error"); }
+      else statusEl.textContent = "⚠ 계정 정보를 불러오지 못했습니다.";
       return;
     }
-
-    // 데이터 화면에 즉시 표시
     updateMyInfo(me);
-    if(price.success) {
-      updatePrice(price);
-      // 추가 API 요청 없이 받아온 데이터로 차트 0.01초 만에 렌더링
-      renderPriceChartData(price.history || []);
-    }
-
-    if(version === loadVersion && myToken === token){
-      statusEl.textContent = "실시간 업데이트 · " + new Date().toLocaleTimeString("ko-KR");
-    }
-
-    // 랭킹은 화면이 정상 표시된 직후 백그라운드에서 로드
+    if(price.success) { updatePrice(price); renderPriceChartData(price.history || []); }
+    if(version === loadVersion && myToken === token) statusEl.textContent = "실시간 업데이트 · " + new Date().toLocaleTimeString("ko-KR");
     loadRanking();
-
   } catch(e){
     if(version !== loadVersion || myToken !== token) return;
     statusEl.textContent = "⚠ 데이터를 불러오지 못했습니다.";
-    console.error(e);
   }
 }
 
 function updatePrice(r){
   const p = Number(r.price || r.currentPrice || 0);
-  currentPriceValue = p;
-  currentPrice.textContent = money(p);
-
+  currentPriceValue = p; currentPrice.textContent = money(p);
   const history = r.history || [];
-
   if (Array.isArray(history) && history.length >= 2) {
     const prevData = Number(history[history.length - 2].price || 0);
     const d = p - prevData;
     const rate = prevData > 0 ? ((d / prevData) * 100).toFixed(2) : 0;
-
-    if (d > 0) {
-      currentPrice.className = "price up";
-      priceChange.className = "price-change positive";
-      priceChange.textContent = "▲ " + money(Math.abs(d)) + " (" + rate + "%) 상승";
-    } else if (d < 0) {
-      currentPrice.className = "price down";
-      priceChange.className = "price-change negative";
-      priceChange.textContent = "▼ " + money(Math.abs(d)) + " (" + Math.abs(rate) + "%) 하락";
-    } else {
-      currentPrice.className = "price";
-      priceChange.className = "price-change";
-      priceChange.textContent = "변동 없음 (0.00%)";
-    }
-  } else {
-    priceChange.className = "price-change";
-    priceChange.textContent = "이전 데이터 없음";
-  }
-
+    if (d > 0) { currentPrice.className = "price up"; priceChange.className = "price-change positive"; priceChange.textContent = "▲ " + money(Math.abs(d)) + " (" + rate + "%) 상승"; }
+    else if (d < 0) { currentPrice.className = "price down"; priceChange.className = "price-change negative"; priceChange.textContent = "▼ " + money(Math.abs(d)) + " (" + Math.abs(rate) + "%) 하락"; }
+    else { currentPrice.className = "price"; priceChange.className = "price-change"; priceChange.textContent = "변동 없음 (0.00%)"; }
+  } else { priceChange.className = "price-change"; priceChange.textContent = "이전 데이터 없음"; }
   updateTradeTotals();
 }
 
@@ -1114,7 +449,6 @@ function updateMyInfo(r){
   cash.textContent = money(r.cash);
   stocks.textContent = Number(r.stocks || 0).toLocaleString("ko-KR") + "주";
   totalAsset.textContent = money(r.totalAsset);
-
   const n = Number(r.profitRate || 0);
   profitRate.textContent = rateText(n);
   profitRate.className = "stat-value " + (n > 0 ? "positive" : n < 0 ? "negative" : "");
@@ -1127,82 +461,36 @@ function updateTradeTotals(){
 
 async function buyStock(){
   const quantity = Number(buyQuantity.value);
-  if(!Number.isInteger(quantity) || quantity <= 0){
-    msg("buyMessage", "1주 이상의 정수 수량을 입력해주세요.", "error");
-    return;
-  }
-
+  if(!Number.isInteger(quantity) || quantity <= 0){ msg("buyMessage", "1주 이상의 정수 수량을 입력해주세요.", "error"); return; }
   try{
     const r = await post("buy", { token, quantity });
-    if(!r.success){
-      msg("buyMessage", r.message || "매수에 실패했습니다.", "error");
-      return;
-    }
-    msg("buyMessage", quantity + "주를 매수했습니다.", "success");
-    buyQuantity.value = "";
-    
+    if(!r.success){ msg("buyMessage", r.message || "매수에 실패했습니다.", "error"); return; }
+    msg("buyMessage", quantity + "주를 매수했습니다.", "success"); buyQuantity.value = "";
     if (r.cash !== undefined && r.stocks !== undefined) {
-      const currentStockVal = r.stocks * currentPriceValue;
-      const totalAssetVal = r.cash + currentStockVal;
-      const profitRateVal = ((totalAssetVal - 3000000) / 3000000) * 100;
-
-      updateMyInfo({
-        cash: r.cash,
-        stocks: r.stocks,
-        totalAsset: totalAssetVal,
-        profitRate: profitRateVal
-      });
+      updateMyInfo({ cash: r.cash, stocks: r.stocks, totalAsset: r.cash + (r.stocks * currentPriceValue), profitRate: (((r.cash + (r.stocks * currentPriceValue)) - 3000000) / 3000000) * 100 });
     }
-  } catch(e){
-    msg("buyMessage", e.message, "error");
-  }
+  } catch(e){ msg("buyMessage", e.message, "error"); }
 }
 
 async function sellStock(){
   const quantity = Number(sellQuantity.value);
-  if(!Number.isInteger(quantity) || quantity <= 0){
-    msg("sellMessage", "1주 이상의 정수 수량을 입력해주세요.", "error");
-    return;
-  }
-
+  if(!Number.isInteger(quantity) || quantity <= 0){ msg("sellMessage", "1주 이상의 정수 수량을 입력해주세요.", "error"); return; }
   try{
     const r = await post("sell", { token, quantity });
-    if(!r.success){
-      msg("sellMessage", r.message || "매도에 실패했습니다.", "error");
-      return;
-    }
-    msg("sellMessage", quantity + "주를 매도했습니다.", "success");
-    sellQuantity.value = "";
-    
+    if(!r.success){ msg("sellMessage", r.message || "매도에 실패했습니다.", "error"); return; }
+    msg("sellMessage", quantity + "주를 매도했습니다.", "success"); sellQuantity.value = "";
     if (r.cash !== undefined && r.stocks !== undefined) {
-      const currentStockVal = r.stocks * currentPriceValue;
-      const totalAssetVal = r.cash + currentStockVal;
-      const profitRateVal = ((totalAssetVal - 3000000) / 3000000) * 100;
-
-      updateMyInfo({
-        cash: r.cash,
-        stocks: r.stocks,
-        totalAsset: totalAssetVal,
-        profitRate: profitRateVal
-      });
+      updateMyInfo({ cash: r.cash, stocks: r.stocks, totalAsset: r.cash + (r.stocks * currentPriceValue), profitRate: (((r.cash + (r.stocks * currentPriceValue)) - 3000000) / 3000000) * 100 });
     }
-  } catch(e){
-    msg("sellMessage", e.message, "error");
-  }
+  } catch(e){ msg("sellMessage", e.message, "error"); }
 }
-
-/* =========================================================
-   랭킹 스위칭 (전체 랭킹 ↔ 이번 달 랭킹)
-   ========================================================= */
 
 let isMonthlyRankingMode = false;
 
 function toggleRankingMode() {
   isMonthlyRankingMode = !isMonthlyRankingMode;
-  
   const titleEl = document.getElementById("rankingTitle");
   const headerEl = document.getElementById("rankingTypeHeader");
-
   if (isMonthlyRankingMode) {
     titleEl.innerHTML = `<span style="color:#4f46e5;">❮</span> <span>이번 달 랭킹</span>`;
     headerEl.textContent = "수익률(이번달)";
@@ -1210,366 +498,110 @@ function toggleRankingMode() {
     titleEl.innerHTML = `<span>전체 랭킹</span> <span style="color:#4f46e5;">❯</span>`;
     headerEl.textContent = "수익률(전체)";
   }
-
   loadRanking();
 }
 
-/* =========================================================
-   랭킹 스위칭 (전체 랭킹 ↔ 이번 달 랭킹) - 강제 갱신 적용
-   ========================================================= */
-
-let isMonthlyRankingMode = false;
-
-function toggleRankingMode() {
-  isMonthlyRankingMode = !isMonthlyRankingMode;
-  
-  const titleEl = document.getElementById("rankingTitle");
-  const headerEl = document.getElementById("rankingTypeHeader");
-
-  if (isMonthlyRankingMode) {
-    titleEl.innerHTML = `<span style="color:#4f46e5;">❮</span> <span>이번 달 랭킹</span>`;
-    headerEl.textContent = "수익률(이번달)";
-  } else {
-    titleEl.innerHTML = `<span>전체 랭킹</span> <span style="color:#4f46e5;">❯</span>`;
-    headerEl.textContent = "수익률(전체)";
-  }
-
-  loadRanking();
-}
-
-async function loadRanking() {
-  try {
-    rankingBody.innerHTML = '<tr><td colspan="3">불러오는 중...</td></tr>';
-    
-    const actionTarget = isMonthlyRankingMode ? "monthlyRanking" : "ranking";
-    
-    // GET 요청 시 구글 서버 캐시 문제를 방지하기 위해 POST 방식과 GET 방식을 모두 지원하도록 안전 호출
-    let r;
-    try {
-      r = await post(actionTarget);
-    } catch(err) {
-      r = await get(actionTarget);
-    }
-
-    if (!r || !r.success) {
-      throw Error(r ? r.message : "응답 데이터 없음");
-    }
-
+async function loadRanking(){
+  try{
+    const action = isMonthlyRankingMode ? "monthlyRanking" : "ranking";
+    const r = await post(action);
+    if(!r || !r.success) throw Error();
     updateRanking(r.ranking || []);
-  } catch (e) {
-    console.error("랭킹 로딩 에러:", e);
+  } catch(e){
     rankingBody.innerHTML = '<tr><td colspan="3">랭킹을 불러오지 못했습니다.</td></tr>';
   }
 }
 
-function updateRanking(a) {
-  if (!Array.isArray(a) || a.length === 0) {
+function updateRanking(a){
+  if(!Array.isArray(a) || !a.length){
     rankingBody.innerHTML = '<tr><td colspan="3">아직 등록된 사용자가 없습니다.</td></tr>';
     return;
   }
-
-  rankingBody.innerHTML = a.map((u, i) => {
+  rankingBody.innerHTML = a.map((u,i)=>{
     const n = Number(u.profitRate || 0);
     const c = n > 0 ? "positive" : n < 0 ? "negative" : "";
-    return `
-      <tr>
-        <td class="rank-number">${i + 1}</td>
-        <td>${escapeHtml(u.username)}</td>
-        <td class="${c}">${rateText(n)}</td>
-      </tr>
-    `;
+    return `<tr><td class="rank-number">${i + 1}</td><td>${escapeHtml(u.username)}</td><td class="${c}">${rateText(n)}</td></tr>`;
   }).join("");
 }
 
 function escapeHtml(t){
-  return String(t)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+  return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
 buyQuantity.addEventListener("input", updateTradeTotals);
 sellQuantity.addEventListener("input", updateTradeTotals);
 
-/* =========================================================
-   [속도 최적화] 백엔드 재호출 없는 순수 차트 렌더링 함수
-   ========================================================= */
 function renderPriceChartData(historyData){
   if(!Array.isArray(historyData) || historyData.length === 0) return;
-
   const h = historyData;
-
   const currentChartKey = JSON.stringify(h);
-  if(currentChartKey === previousStockChartKey){
-    return;
-  }
+  if(currentChartKey === previousStockChartKey) return;
   previousStockChartKey = currentChartKey;
 
   const wrapper = document.getElementById("chartWrapper");
-  const itemWidth = 35;
-  const yAxisWidth = 85;
-  const totalWidth = (h.length * itemWidth) + yAxisWidth;
-  wrapper.style.width = totalWidth + "px";
+  wrapper.style.width = ((h.length * 35) + 85) + "px";
 
   const labels = h.map(x => x.date);
-  const candleRanges = [];
-  const candleColors = [];
-  const candleBorderColors = [];
-
+  const candleRanges = []; const candleColors = []; const candleBorderColors = [];
   for (let i = 0; i < h.length; i++) {
     const closePrice = Number(h[i].price);
     const openPrice = i > 0 ? Number(h[i - 1].price) : closePrice;
-
     candleRanges.push([openPrice, closePrice]);
-
-    if (closePrice > openPrice) {
-      candleColors.push("#dc2626");
-      candleBorderColors.push("#dc2626");
-    } else if (closePrice < openPrice) {
-      candleColors.push("#2563eb");
-      candleBorderColors.push("#2563eb");
-    } else {
-      candleColors.push("#6b7280");
-      candleBorderColors.push("#6b7280");
-    }
+    if (closePrice > openPrice) { candleColors.push("#dc2626"); candleBorderColors.push("#dc2626"); }
+    else if (closePrice < openPrice) { candleColors.push("#2563eb"); candleBorderColors.push("#2563eb"); }
+    else { candleColors.push("#6b7280"); candleBorderColors.push("#6b7280"); }
   }
 
-  const currentPrice = h.length > 0 ? Number(h[h.length - 1].price) : 0;
-  const prevPrice = h.length > 1 ? Number(h[h.length - 2].price) : currentPrice;
-  const diff = currentPrice - prevPrice;
+  const currentPriceVal = h.length > 0 ? Number(h[h.length - 1].price) : 0;
+  const prevPrice = h.length > 1 ? Number(h[h.length - 2].price) : currentPriceVal;
+  const diff = currentPriceVal - prevPrice;
   const diffPercent = prevPrice > 0 ? ((diff / prevPrice) * 100).toFixed(2) : "0.00";
-  
-  const isUp = diff >= 0;
-  const themeColor = isUp ? "#dc2626" : "#2563eb";
-  const sign = diff > 0 ? "+" : "";
-  const priceText = `${currentPrice.toLocaleString("ko-KR")}원 (${sign}${diffPercent}%)`;
+  const themeColor = diff >= 0 ? "#dc2626" : "#2563eb";
+  const priceText = `${currentPriceVal.toLocaleString("ko-KR")}원 (${diff > 0 ? "+" : ""}${diffPercent}%)`;
 
   if(stockChart){
     stockChart.data.labels = labels;
     stockChart.data.datasets[0].data = candleRanges;
     stockChart.data.datasets[0].backgroundColor = candleColors;
     stockChart.data.datasets[0].borderColor = candleBorderColors;
-    
     if(stockChart.options.plugins.currentPriceLine){
-      stockChart.options.plugins.currentPriceLine.price = currentPrice;
+      stockChart.options.plugins.currentPriceLine.price = currentPriceVal;
       stockChart.options.plugins.currentPriceLine.text = priceText;
       stockChart.options.plugins.currentPriceLine.color = themeColor;
     }
-    
     stockChart.update("none");
-    updateYAxisByVisibleRange(stockChart);
-
-    setTimeout(() => {
-      const scrollElem = document.getElementById("chartScroll");
-      if(scrollElem) scrollElem.scrollLeft = scrollElem.scrollWidth;
-    }, 50);
     return;
   }
-
-  const currentPriceLinePlugin = {
-    id: "currentPriceLine",
-    price: currentPrice,
-    text: priceText,
-    color: themeColor,
-    afterDatasetsDraw(chart, args, options) {
-      const { ctx, chartArea: { left, right }, scales: { y } } = chart;
-      const targetPrice = options.price;
-      if (targetPrice === undefined || targetPrice === null) return;
-
-      const yPos = y.getPixelForValue(targetPrice);
-      const lineColor = options.color || "#dc2626";
-      const labelText = options.text || "";
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.setLineDash([4, 4]);
-      ctx.lineWidth = 1.5;
-      ctx.strokeStyle = lineColor;
-      ctx.moveTo(left, yPos);
-      ctx.lineTo(right, yPos);
-      ctx.stroke();
-
-      ctx.setLineDash([]);
-      ctx.font = "bold 11px -apple-system, BlinkMacSystemFont, sans-serif";
-      const paddingX = 8;
-      const textWidth = ctx.measureText(labelText).width;
-      const boxWidth = textWidth + paddingX * 2;
-      const boxHeight = 20;
-
-      const boxX = right + 4;
-      const boxY = yPos - (boxHeight / 2);
-
-      ctx.fillStyle = lineColor;
-      ctx.beginPath();
-      if (ctx.roundRect) {
-        ctx.roundRect(boxX, boxY, boxWidth, boxHeight, 4);
-      } else {
-        ctx.rect(boxX, boxY, boxWidth, boxHeight);
-      }
-      ctx.fill();
-
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "left";
-      ctx.textBaseline = "middle";
-      ctx.fillText(labelText, boxX + paddingX, yPos);
-
-      ctx.restore();
-    }
-  };
 
   stockChart = new Chart(document.getElementById("stockChart").getContext("2d"), {
     type: "bar",
     data: {
       labels: labels,
-      datasets: [{
-        label: "주가 변동",
-        data: candleRanges,
-        backgroundColor: candleColors,
-        borderColor: candleBorderColors,
-        borderWidth: 1,
-        borderRadius: 1,
-        borderSkipped: false,
-        barThickness: 16,
-        maxBarThickness: 16
-      }]
+      datasets: [{ label: "주가 변동", data: candleRanges, backgroundColor: candleColors, borderColor: candleBorderColors, borderWidth: 1, barThickness: 16 }]
     },
-    plugins: [currentPriceLinePlugin],
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: false,
-      layout: { padding: { right: 120 } },
-      plugins: {
-        legend: { display: false },
-        currentPriceLine: { price: currentPrice, text: priceText, color: themeColor },
-        tooltip: {
-          backgroundColor: "#202124",
-          padding: 12,
-          callbacks: {
-            label: function(ctx) {
-              const raw = ctx.raw;
-              if (!Array.isArray(raw)) return "";
-              const open = raw[0];
-              const close = raw[1];
-              const diff = close - open;
-              const status = diff > 0 ? "▲ 상승" : diff < 0 ? "▼ 하락" : "보합";
-              return [
-                "시가: " + open.toLocaleString("ko-KR") + "원",
-                "종가: " + close.toLocaleString("ko-KR") + "원 (" + status + ")"
-              ];
-            }
-          }
-        }
-      },
+      responsive: true, maintainAspectRatio: false, animation: false, layout: { padding: { right: 120 } },
+      plugins: { legend: { display: false } },
       scales: {
-        x: {
-          title: { display: true, text: "날짜" },
-          grid: { display: false },
-          ticks: { color: "#6b7280", autoSkip: false, maxRotation: 0 }
-        },
-        y: {
-          title: { display: true, text: "주가 (원)" },
-          beginAtZero: false,
-          ticks: {
-            color: "#6b7280",
-            callback: v => Number(v).toLocaleString("ko-KR")
-          },
-            grid: { color: "#e8eaf0" }
-          }
-        }
-      }
-    });
-
-    updateYAxisByVisibleRange(stockChart);
-
-    setTimeout(() => {
-      const scrollElem = document.getElementById("chartScroll");
-      if(scrollElem) scrollElem.scrollLeft = scrollElem.scrollWidth;
-    }, 100);
-}
-
-function updateYAxisByVisibleRange(chart) {
-  if (!chart) return;
-
-  const scrollContainer = document.getElementById("chartScroll");
-  if (!scrollContainer) return;
-
-  const scrollLeft = scrollContainer.scrollLeft;
-  const clientWidth = scrollContainer.clientWidth;
-  const scrollRight = scrollLeft + clientWidth;
-
-  const meta = chart.getDatasetMeta(0);
-  const data = chart.data.datasets[0].data;
-
-  let minVal = Infinity;
-  let maxVal = -Infinity;
-  let hasVisibleBars = false;
-
-  meta.data.forEach((bar, index) => {
-    if (bar.x >= scrollLeft - 20 && bar.x <= scrollRight + 20) {
-      const range = data[index];
-      if (Array.isArray(range)) {
-        const low = Math.min(range[0], range[1]);
-        const high = Math.max(range[0], range[1]);
-        if (low < minVal) minVal = low;
-        if (high > maxVal) maxVal = high;
-        hasVisibleBars = true;
+        x: { title: { display: true, text: "날짜" }, grid: { display: false }, ticks: { color: "#6b7280" } },
+        y: { title: { display: true, text: "주가 (원)" }, beginAtZero: false, ticks: { color: "#6b7280", callback: v => Number(v).toLocaleString("ko-KR") }, grid: { color: "#e8eaf0" } }
       }
     }
   });
-
-  if (hasVisibleBars && minVal !== Infinity && maxVal !== -Infinity) {
-    const margin = (maxVal - minVal) * 0.08 || minVal * 0.05;
-    chart.options.scales.y.min = Math.floor(minVal - margin);
-    chart.options.scales.y.max = Math.ceil(maxVal + margin);
-    chart.update("none");
-  }
 }
 
 async function initializeStock(){
   const savedToken = localStorage.getItem("powerStockToken");
-  if(!savedToken){
-    token = "";
-    rememberLogin.checked = false;
-    return;
-  }
-
-  token = savedToken;
-  rememberLogin.checked = true;
-
-  const myToken = token;
-  const version = ++loadVersion;
-
+  if(!savedToken){ token = ""; rememberLogin.checked = false; return; }
+  token = savedToken; rememberLogin.checked = true;
   try{
-    const r = await post("me", { token:myToken });
-    if(version !== loadVersion || myToken !== token) return;
-
-    if(r.success){
-      openApp();
-    } else {
-      localStorage.removeItem("powerStockToken");
-      token = "";
-      rememberLogin.checked = false;
-    }
-  } catch(e){
-    console.error(e);
-  }
-}
-
-const chartScrollElem = document.getElementById("chartScroll");
-if (chartScrollElem) {
-  chartScrollElem.addEventListener("scroll", () => {
-    if (stockChart) {
-      updateYAxisByVisibleRange(stockChart);
-    }
-  });
+    const r = await post("me", { token });
+    if(r.success) openApp();
+    else { localStorage.removeItem("powerStockToken"); token = ""; rememberLogin.checked = false; }
+  } catch(e){}
 }
 
 initializeStock();
-
 </script>
-
 </body>
 </html>
